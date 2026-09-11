@@ -23,6 +23,13 @@ resource "aws_subnet" "public" {
     Name    = "${var.project_tag}-public-subnet"
     Project = var.project_tag
   }
+
+  lifecycle {
+    precondition {
+      condition     = startswith(var.availability_zone, var.aws_region)
+      error_message = "availability_ozne must be inside aws_region (e.g. eu-central-1a in eu-central-1)."
+    }
+  }
 }
 
 resource "aws_internet_gateway" "staging" {
@@ -160,7 +167,33 @@ resource "aws_instance" "app" {
   subnet_id              = aws_subnet.public.id
   vpc_security_group_ids = [aws_security_group.app.id]
   iam_instance_profile   = aws_iam_instance_profile.app.name
+  key_name               = var.key_name
 
+  user_data = <<-EOF
+    #!/bin/bash
+    set -euxo pipefail
+    mkdir -p /opt/staging-app
+    cat > /opt/staging-app/index.html <<'HTML'
+    <!doctype html><title>Kente Retail staging</title>
+    <h1>Kente Retail staging app</h1>
+    <p>Provisioned by Terraform.</p>
+    HTML
+    cat > /etc/systemd/system/staging-app.service <<'UNIT'
+    [Unit]
+    Description=Kente Retail staging placeholder app
+    After=network-online.target
+
+    [Service]
+    WorkingDirectory=/opt/staging-app
+    ExecStart=/usr/bin/python3 -m http.server 8080
+    Restart=always
+
+    [Install]
+    WantedBy=multi-user.target
+    UNIT
+    systemctl daemon-reload
+    systemctl enable --now staging-app
+  EOF
   tags = {
     Name    = "${var.project_tag}-app"
     Project = var.project_tag

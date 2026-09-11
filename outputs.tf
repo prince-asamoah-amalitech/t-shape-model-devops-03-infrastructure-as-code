@@ -37,3 +37,8 @@ output "iam_role_name" {
   description = "Name of the EC2 IAM role -- pass this to verify_security_defaults.sh."
   value       = aws_iam_role.app.name
 }
+
+output "aws_account_id" {
+  description = "Account the stack was provisioned in -- include in teardown evidence."
+  value       = data.aws_caller_identity.current.account_id
+}

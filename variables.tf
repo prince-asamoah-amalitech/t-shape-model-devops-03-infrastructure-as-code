@@ -42,6 +42,11 @@ variable "allowed_ssh_cidr" {
   # Deliberately not a real reachable range -- replace with your own IP/CIDR
   # before applying. Left non-empty so `terraform validate` passes out of the box.
   default = "203.0.113.0/24"
+
+  validation {
+    condition     = !endswith(var.allowed_ssh_cidr, "/0")
+    error_message = "allowed_ssh_cidr must be a specific IP or range you control -- never 0.0.0.0/0 (spec 4)."
+  }
 }
 
 variable "ami_id" {
@@ -63,4 +68,10 @@ variable "bucket_name_suffix" {
   description = "Suffix appended to project_tag to form the (globally-unique) S3 bucket name."
   type        = string
   default     = "data"
+}
+
+variable "key_name" {
+  description = "Existing EC2 key pair for SSH. The SG opens port 22, so without this the rule leads nowhere."
+  type        = string
+  default     = null
 }
