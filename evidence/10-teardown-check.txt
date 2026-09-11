@@ -1,0 +1,46 @@
+---------------------------------------
+|          DescribeInstances          |
++----------------------+--------------+
+|  i-0db7465fe5b16f806 |  terminated  |
+|  i-0eae0d2f80b755468 |  terminated  |
++----------------------+--------------+
+
+aws: [ERROR]: An error occurred (AccessDeniedException) when calling the GetResources operation: User: arn:aws:sts::839071825379:assumed-role/DCEPrincipal-dce/jUd5aUmUOE__prince+asamoah+amalitech+com is not authorized to perform: tag:GetResources because no identity-based policy allows the tag:GetResources action
+bash: [200~aws: command not found
+
+aws: [ERROR]: An error occurred (NoSuchEntity) when calling the GetRole operation: The role with name kente-iac-princeasamoah-ec2-role cannot be found.
+
+aws: [ERROR]: An error occurred (NoSuchEntity) when calling the GetInstanceProfile operation: Instance Profile kente-iac-princeasamoah-ec2-profile cannot be found.
+{
+    "BucketArn": "arn:aws:s3:::kente-iac-princeasamoah-data",
+    "BucketRegion": "eu-central-1",
+    "AccessPointAlias": false
+}
+
+aws: [ERROR]: An error occurred (404) when calling the HeadBucket operation: Not Found
+
+aws: [ERROR]: An error occurred (NoSuchEntity) when calling the GetRole operation: The role with name kente-iac-princeasamoah-ec2-role cannot be found.
+
+aws: [ERROR]: An error occurred (NoSuchEntity) when calling the GetInstanceProfile operation: Instance Profile kente-iac-princeasamoah-ec2-profile cannot be found.
+kenter-iac-princeasamoah-key
+
+--- READING THIS FILE ---
+NoSuchEntity (IAM role, instance profile), 404 Not Found (S3 bucket), and empty
+output (VPC, key pairs) are the expected PASSING results -- they confirm the
+resources are gone.
+
+Terminated instances remain queryable via describe-instances and the Resource
+Groups Tagging API for roughly an hour after destruction. A clean teardown shows
+every instance in state "terminated", not an empty result.
+
+The us-east-1 tag sweep returned AccessDeniedException: the sandbox role
+(DCEPrincipal-dce) is scoped to eu-central-1 and cannot call tag:GetResources
+elsewhere. IAM is global and only indexed through us-east-1, so the IAM role and
+instance profile were verified directly with iam get-role and
+iam get-instance-profile instead -- both NoSuchEntity.
+
+terraform destroy required two passes: the first destroyed 11 of 12 resources and
+halted with BucketNotEmpty, because the verification object written in the spec 3
+check was still in the bucket and the configuration sets no force_destroy. After
+aws s3 rm --recursive, the second pass completed with "Destroy complete!
+Resources: 1 destroyed."

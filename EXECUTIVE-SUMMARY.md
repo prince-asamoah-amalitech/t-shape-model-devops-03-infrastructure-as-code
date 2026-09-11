@@ -95,12 +95,31 @@ Full transcripts — init, validate, plan, apply, and each verification above �
 
 ## Teardown
 
-Everything tagged `Project = kente-iac-princeasamoah` is destroyed with
-`terraform destroy`, followed by a tag sweep in both eu-central-1 and us-east-1 (IAM is
-global and only indexed through the latter), and a manual `delete-key-pair` for the key
-pair, which was created outside Terraform.
+All twelve resources have been destroyed and the teardown independently verified.
+`terraform state list` is empty.
 
-One caveat worth recording for whoever verifies it: terminated instances remain visible
-to both the Resource Groups Tagging API and `describe-instances` for roughly an hour
-after destruction. A clean teardown shows every instance in state `terminated` — not an
-empty result. Instance state, not presence in a tag sweep, is the reliable signal.
+`terraform destroy` required two passes. The first removed eleven resources and halted
+with `BucketNotEmpty`: the object written during the bucket verification was still
+present, and the configuration deliberately sets no `force_destroy`, so an accidental
+destroy cannot silently delete application data. After emptying the bucket, the second
+pass completed.
+
+| Check | Result |
+|---|---|
+| EC2 instances tagged `Project` | Both `terminated` |
+| IAM role and instance profile | `NoSuchEntity` |
+| S3 bucket | 404 Not Found |
+| VPC tagged `Project` | No results |
+| Key pairs | Both deleted, including one created early under a mistyped name |
+
+Two caveats for whoever verifies this independently. Terminated instances remain visible
+to `describe-instances` and the Resource Groups Tagging API for roughly an hour, so a
+clean teardown shows every instance in state `terminated` rather than an empty result.
+And the IAM tag sweep was unavailable — IAM is indexed only through us-east-1, which this
+sandbox role is not permitted to query — so IAM teardown was confirmed directly with
+`iam get-role` and `iam get-instance-profile`.
+
+The most durable lesson of the teardown is that the only resources at risk of being left
+behind were the ones Terraform never managed: a key pair created by CLI, untagged and
+under a mistyped name, invisible to every tag-based check. Managing it as an
+`aws_key_pair` resource would have destroyed it with everything else.

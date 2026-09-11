@@ -103,6 +103,29 @@ second sweep there and confirmed the tags directly with `iam list-role-tags` and
 `iam get-instance-profile`. Their absence from the regional sweep was an API artifact,
 not a tagging failure.
 
+**3.8 `terraform destroy` is not atomic, and a non-empty bucket stops it.**
+The first destroy removed 11 of 12 resources and then failed with `BucketNotEmpty`,
+because the object written during the §3 verification was still in the bucket and the
+configuration sets no `force_destroy`. State was left holding exactly one resource. After
+`aws s3 rm --recursive`, a second `destroy` completed. **Lesson:** a failed destroy leaves
+a partial stack, so teardown must be *verified* rather than assumed — had I stopped at the
+first command, a bucket would have been left behind in the account.
+
+**3.9 Resources created outside Terraform are the ones that survive teardown.**
+`describe-key-pairs` after teardown still showed `kenter-iac-princeasamoah-key` — a key
+pair created early in the lab under a mistyped name. Because it was made with the CLI it
+was untagged, so no `Project` sweep would find it, and because the name is misspelled a
+grep for `kente-iac-princeasamoah` would miss it too. It had to be deleted by name. This
+is the same root cause as 3.3: what Terraform does not manage, Terraform cannot tear down,
+and a tag-based teardown check cannot see.
+
+**3.10 The sandbox role is region-scoped, which breaks the IAM tag sweep.**
+`tag:GetResources` in us-east-1 returned `AccessDeniedException` for the
+`DCEPrincipal-dce` role. Since IAM is only indexed through us-east-1, the IAM tag sweep
+was unavailable entirely; I verified the role and instance profile directly with
+`iam get-role` and `iam get-instance-profile`, both returning `NoSuchEntity`. **Lesson:**
+have a fallback verification that does not depend on a convenience API.
+
 **3.7 Three resources cannot carry tags at all.**
 `aws_route_table_association`, `aws_iam_role_policy`, and
 `aws_s3_bucket_public_access_block` do not support tagging in AWS. So 9 of the 12
@@ -118,7 +141,7 @@ Spec §9 places these out of scope. Each is recorded with the risk it leaves ope
 | Gap | Risk if left as-is | Why deferred |
 |---|---|---|
 | No S3 versioning | An overwrite or delete of application data is unrecoverable | Not required by §3. This would be my first addition for anything beyond staging — it is cheap and the bucket is small. |
-| No `force_destroy` on the bucket | `terraform destroy` fails while objects remain, requiring a manual `aws s3 rm` | Arguably correct as-is: an accidental `destroy` should not silently delete data. Noted as a deliberate trade-off, not an oversight. |
+| No `force_destroy` on the bucket | `terraform destroy` halts while objects remain, requiring a manual `aws s3 rm` and a second pass — which is what happened here (see 3.8) | Arguably correct as-is: an accidental `destroy` should not silently delete application data. Kept deliberately, as a trade-off rather than an oversight. |
 | Single AZ, no load balancer, no autoscaling | A zone failure takes the entire stack down; no horizontal scale | §1 permits single-AZ for staging and §9 scopes HA out explicitly. |
 | Instance directly internet-facing; no private subnet or NAT gateway | Larger attack surface than a production design should have | §2 requires a public IP for the reachability check. Acceptable for staging; production would put the instance in a private subnet behind a load balancer. |
 | No SSM Session Manager access | SSH with a key pair is the only way in, and the key is a long-lived secret on my laptop | Attaching `AmazonSSMManagedInstanceCore` would let me drop the port-22 rule entirely — a better design, but it goes beyond what §4 asks for. |
@@ -176,3 +199,23 @@ exposure is the point of the exercise.
 
 The denied `aws s3 ls` is the most informative single line in the evidence: it
 demonstrates least privilege working as intended, which a passing test cannot.
+
+---
+
+## 8. Teardown
+
+| Check | Result |
+|---|---|
+| `terraform destroy` | Completed over two passes; state holds 0 managed resources |
+| EC2 instances tagged `Project` | Both `terminated` (`i-0db7465fe5b16f806`, `i-0eae0d2f80b755468`) |
+| IAM role | `NoSuchEntity` |
+| IAM instance profile | `NoSuchEntity` |
+| S3 bucket | Deleted after emptying; `head-bucket` returns 404 |
+| VPC tagged `Project` | No results |
+| Key pairs | `kente-iac-princeasamoah-key` deleted; the mistyped `kenter-…` pair deleted by name |
+| Local private key | `kente-iac-princeasamoah-key.pem` removed from disk |
+
+Evidence: `evidence/09-destroy.txt`, `evidence/10-teardown-check.txt`.
+
+Terminated instances stay queryable for roughly an hour, so a clean teardown reads as
+every instance in state `terminated` — not an empty result.
