@@ -1,0 +1,14 @@
+[0m[1maws_instance.app: Destroying... [id=i-0eae0d2f80b755468][0m[0m
+[0m[1maws_instance.app: Still destroying... [id=i-0eae0d2f80b755468, 00m10s elapsed][0m[0m
+[0m[1maws_instance.app: Still destroying... [id=i-0eae0d2f80b755468, 00m20s elapsed][0m[0m
+[0m[1maws_instance.app: Still destroying... [id=i-0eae0d2f80b755468, 00m30s elapsed][0m[0m
+[0m[1maws_instance.app: Destruction complete after 33s[0m
+[0m[1maws_instance.app: Creating...[0m[0m
+[31m╷[0m[0m
+[31m│[0m [0m[1m[31mError: [0m[0m[1mcreating EC2 Instance: operation error EC2: RunInstances, https response error StatusCode: 400, RequestID: 64ee2ae1-32dd-4387-8a46-cef8e2823f64, api error InvalidKeyPair.NotFound: The key pair 'kente-iac-princeasamoah-key' does not exist[0m
+[31m│[0m [0m
+[31m│[0m [0m[0m  with aws_instance.app,
+[31m│[0m [0m  on main.tf line 164, in resource "aws_instance" "app":
+[31m│[0m [0m 164: resource "aws_instance" "app" [4m{[0m[0m
+[31m│[0m [0m
+[31m╵[0m[0m

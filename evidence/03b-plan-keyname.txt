@@ -1,0 +1,145 @@
+[0m[1mdata.aws_caller_identity.current: Reading...[0m[0m
+[0m[1maws_vpc.staging: Refreshing state... [id=vpc-0d83aa6f4a68f00d5][0m
+[0m[1maws_iam_role.app: Refreshing state... [id=kente-iac-princeasamoah-ec2-role][0m
+[0m[1maws_s3_bucket.app_data: Refreshing state... [id=kente-iac-princeasamoah-data][0m
+[0m[1mdata.aws_caller_identity.current: Read complete after 0s [id=839071825379][0m
+[0m[1maws_iam_instance_profile.app: Refreshing state... [id=kente-iac-princeasamoah-ec2-profile][0m
+[0m[1maws_internet_gateway.staging: Refreshing state... [id=igw-0ac90231eb832afd1][0m
+[0m[1maws_subnet.public: Refreshing state... [id=subnet-096ba70fe6039c2e8][0m
+[0m[1maws_security_group.app: Refreshing state... [id=sg-0db1d61fcdf9bb654][0m
+[0m[1maws_route_table.public: Refreshing state... [id=rtb-019ee247ea988b613][0m
+[0m[1maws_instance.app: Refreshing state... [id=i-0eae0d2f80b755468][0m
+[0m[1maws_route_table_association.public: Refreshing state... [id=rtbassoc-01e835c9844a97224][0m
+[0m[1maws_s3_bucket_public_access_block.app_data: Refreshing state... [id=kente-iac-princeasamoah-data][0m
+[0m[1maws_iam_role_policy.app_s3_access: Refreshing state... [id=kente-iac-princeasamoah-ec2-role:kente-iac-princeasamoah-s3-access][0m
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+[31m-[0m/[32m+[0m destroy and then create replacement[0m
+
+Terraform will perform the following actions:
+
+[1m  # aws_instance.app[0m must be [1m[31mreplaced[0m
+[0m[31m-[0m/[32m+[0m[0m resource "aws_instance" "app" {
+      [33m~[0m[0m arn                                  = "arn:aws:ec2:eu-central-1:839071825379:instance/i-0eae0d2f80b755468" -> (known after apply)
+      [33m~[0m[0m associate_public_ip_address          = true -> (known after apply)
+      [33m~[0m[0m availability_zone                    = "eu-central-1a" -> (known after apply)
+      [33m~[0m[0m cpu_core_count                       = 1 -> (known after apply)
+      [33m~[0m[0m cpu_threads_per_core                 = 2 -> (known after apply)
+      [33m~[0m[0m disable_api_stop                     = false -> (known after apply)
+      [33m~[0m[0m disable_api_termination              = false -> (known after apply)
+      [33m~[0m[0m ebs_optimized                        = false -> (known after apply)
+      [32m+[0m[0m enable_primary_ipv6                  = (known after apply)
+      [31m-[0m[0m hibernation                          = false [90m-> null[0m[0m
+      [32m+[0m[0m host_id                              = (known after apply)
+      [32m+[0m[0m host_resource_group_arn              = (known after apply)
+      [33m~[0m[0m id                                   = "i-0eae0d2f80b755468" -> (known after apply)
+      [33m~[0m[0m instance_initiated_shutdown_behavior = "stop" -> (known after apply)
+      [32m+[0m[0m instance_lifecycle                   = (known after apply)
+      [33m~[0m[0m instance_state                       = "running" -> (known after apply)
+      [33m~[0m[0m ipv6_address_count                   = 0 -> (known after apply)
+      [33m~[0m[0m ipv6_addresses                       = [] -> (known after apply)
+      [32m+[0m[0m key_name                             = "kente-iac-princeasamoah-key" [31m# forces replacement[0m[0m
+      [33m~[0m[0m monitoring                           = false -> (known after apply)
+      [32m+[0m[0m outpost_arn                          = (known after apply)
+      [32m+[0m[0m password_data                        = (known after apply)
+      [32m+[0m[0m placement_group                      = (known after apply)
+      [33m~[0m[0m placement_partition_number           = 0 -> (known after apply)
+      [33m~[0m[0m primary_network_interface_id         = "eni-044fe56a5e2cd3803" -> (known after apply)
+      [33m~[0m[0m private_dns                          = "ip-10-42-1-37.eu-central-1.compute.internal" -> (known after apply)
+      [33m~[0m[0m private_ip                           = "10.42.1.37" -> (known after apply)
+      [33m~[0m[0m public_dns                           = "ec2-52-57-78-7.eu-central-1.compute.amazonaws.com" -> (known after apply)
+      [33m~[0m[0m public_ip                            = "52.57.78.7" -> (known after apply)
+      [33m~[0m[0m secondary_private_ips                = [] -> (known after apply)
+      [33m~[0m[0m security_groups                      = [] -> (known after apply)
+      [32m+[0m[0m spot_instance_request_id             = (known after apply)
+        tags                                 = {
+            "Name"    = "kente-iac-princeasamoah-app"
+            "Project" = "kente-iac-princeasamoah"
+        }
+      [33m~[0m[0m tenancy                              = "default" -> (known after apply)
+      [32m+[0m[0m user_data_base64                     = (known after apply)
+        [90m# (10 unchanged attributes hidden)[0m[0m
+
+      [33m~[0m[0m capacity_reservation_specification (known after apply)
+      [31m-[0m[0m capacity_reservation_specification {
+          [31m-[0m[0m capacity_reservation_preference = "open" [90m-> null[0m[0m
+        }
+
+      [33m~[0m[0m cpu_options (known after apply)
+      [31m-[0m[0m cpu_options {
+          [31m-[0m[0m core_count       = 1 [90m-> null[0m[0m
+          [31m-[0m[0m threads_per_core = 2 [90m-> null[0m[0m
+            [90m# (1 unchanged attribute hidden)[0m[0m
+        }
+
+      [31m-[0m[0m credit_specification {
+          [31m-[0m[0m cpu_credits = "unlimited" [90m-> null[0m[0m
+        }
+
+      [33m~[0m[0m ebs_block_device (known after apply)
+
+      [33m~[0m[0m enclave_options (known after apply)
+      [31m-[0m[0m enclave_options {
+          [31m-[0m[0m enabled = false [90m-> null[0m[0m
+        }
+
+      [33m~[0m[0m ephemeral_block_device (known after apply)
+
+      [33m~[0m[0m instance_market_options (known after apply)
+
+      [33m~[0m[0m maintenance_options (known after apply)
+      [31m-[0m[0m maintenance_options {
+          [31m-[0m[0m auto_recovery = "default" [90m-> null[0m[0m
+        }
+
+      [33m~[0m[0m metadata_options (known after apply)
+      [31m-[0m[0m metadata_options {
+          [31m-[0m[0m http_endpoint               = "enabled" [90m-> null[0m[0m
+          [31m-[0m[0m http_protocol_ipv6          = "disabled" [90m-> null[0m[0m
+          [31m-[0m[0m http_put_response_hop_limit = 2 [90m-> null[0m[0m
+          [31m-[0m[0m http_tokens                 = "required" [90m-> null[0m[0m
+          [31m-[0m[0m instance_metadata_tags      = "disabled" [90m-> null[0m[0m
+        }
+
+      [33m~[0m[0m network_interface (known after apply)
+
+      [33m~[0m[0m private_dns_name_options (known after apply)
+      [31m-[0m[0m private_dns_name_options {
+          [31m-[0m[0m enable_resource_name_dns_a_record    = false [90m-> null[0m[0m
+          [31m-[0m[0m enable_resource_name_dns_aaaa_record = false [90m-> null[0m[0m
+          [31m-[0m[0m hostname_type                        = "ip-name" [90m-> null[0m[0m
+        }
+
+      [33m~[0m[0m root_block_device (known after apply)
+      [31m-[0m[0m root_block_device {
+          [31m-[0m[0m delete_on_termination = true [90m-> null[0m[0m
+          [31m-[0m[0m device_name           = "/dev/xvda" [90m-> null[0m[0m
+          [31m-[0m[0m encrypted             = false [90m-> null[0m[0m
+          [31m-[0m[0m iops                  = 3000 [90m-> null[0m[0m
+          [31m-[0m[0m tags                  = {
+              [31m-[0m[0m "Project" = "kente-iac-princeasamoah"
+            } [90m-> null[0m[0m
+          [31m-[0m[0m tags_all              = {
+              [31m-[0m[0m "Project" = "kente-iac-princeasamoah"
+            } [90m-> null[0m[0m
+          [31m-[0m[0m throughput            = 125 [90m-> null[0m[0m
+          [31m-[0m[0m volume_id             = "vol-02a084c3d1a90d2dc" [90m-> null[0m[0m
+          [31m-[0m[0m volume_size           = 8 [90m-> null[0m[0m
+          [31m-[0m[0m volume_type           = "gp3" [90m-> null[0m[0m
+            [90m# (1 unchanged attribute hidden)[0m[0m
+        }
+    }
+
+[1mPlan:[0m [0m1 to add, 0 to change, 1 to destroy.
+
+Changes to Outputs:
+  [33m~[0m[0m instance_id         = "i-0eae0d2f80b755468" -> (known after apply)
+  [33m~[0m[0m instance_public_ip  = "52.57.78.7" -> (known after apply)
+[90m
+─────────────────────────────────────────────────────────────────────────────[0m
+
+Saved the plan to: tfplan
+
+To perform exactly these actions, run the following command to apply:
+    terraform apply "tfplan"

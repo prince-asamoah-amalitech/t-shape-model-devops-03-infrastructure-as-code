@@ -1,0 +1,21 @@
+----------------------------------------------------------------------------------
+|                                  GetResources                                  |
++--------------------------------------------------------------------------------+
+|  arn:aws:ec2:eu-central-1:839071825379:key-pair/key-08930f764454fd571          |
+|  arn:aws:ec2:eu-central-1:839071825379:volume/vol-02a084c3d1a90d2dc            |
+|  arn:aws:ec2:eu-central-1:839071825379:route-table/rtb-019ee247ea988b613       |
+|  arn:aws:ec2:eu-central-1:839071825379:vpc/vpc-0d83aa6f4a68f00d5               |
+|  arn:aws:ec2:eu-central-1:839071825379:subnet/subnet-096ba70fe6039c2e8         |
+|  arn:aws:ec2:eu-central-1:839071825379:instance/i-0db7465fe5b16f806            |
+|  arn:aws:ec2:eu-central-1:839071825379:instance/i-0eae0d2f80b755468            |
+|  arn:aws:ec2:eu-central-1:839071825379:internet-gateway/igw-0ac90231eb832afd1  |
+|  arn:aws:s3:::kente-iac-princeasamoah-data                                     |
+|  arn:aws:ec2:eu-central-1:839071825379:security-group/sg-0db1d61fcdf9bb654     |
+|  arn:aws:ec2:eu-central-1:839071825379:volume/vol-08fbcecb2a6f3d06b            |
++--------------------------------------------------------------------------------+
+---------------------------------------
+|          DescribeInstances          |
++----------------------+--------------+
+|  i-0db7465fe5b16f806 |  running     |
+|  i-0eae0d2f80b755468 |  terminated  |
++----------------------+--------------+

@@ -1,0 +1,23 @@
++ aws sts get-caller-identity
+{
+    "UserId": "AROA4GXET7XRQ6JDECTJV:i-0db7465fe5b16f806",
+    "Account": "839071825379",
+    "Arn": "arn:aws:sts::839071825379:assumed-role/kente-iac-princeasamoah-ec2-role/i-0db7465fe5b16f806"
+}
++ ls -la /home/ec2-user/.aws
+no ~/.aws -- credentials come from the instance profile
+ls: cannot access '/home/ec2-user/.aws': No such file or directory
++ echo 'no ~/.aws -- credentials come from the instance profile'
+++ date -u
++ echo 'staging evidence Fri Sep 11 23:37:04 UTC 2026'
++ aws s3 cp /tmp/evidence.txt s3://kente-iac-princeasamoah-data/evidence.txt
+Completed 46 Bytes/46 Bytes (801 Bytes/s) with 1 file(s) remainingupload: ../../tmp/evidence.txt to s3://kente-iac-princeasamoah-data/evidence.txt
++ aws s3 ls s3://kente-iac-princeasamoah-data/
+2026-09-11 23:37:06         46 evidence.txt
++ aws s3 cp s3://kente-iac-princeasamoah-data/evidence.txt -
+staging evidence Fri Sep 11 23:37:04 UTC 2026
++ aws s3 ls
+
+An error occurred (AccessDenied) when calling the ListBuckets operation: User: arn:aws:sts::839071825379:assumed-role/kente-iac-princeasamoah-ec2-role/i-0db7465fe5b16f806 is not authorized to perform: s3:ListAllMyBuckets because no identity-based policy allows the s3:ListAllMyBuckets action
+EXPECTED: AccessDenied -- s3:ListAllMyBuckets is not in the role policy
++ echo 'EXPECTED: AccessDenied -- s3:ListAllMyBuckets is not in the role policy'

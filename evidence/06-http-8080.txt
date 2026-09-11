@@ -1,0 +1,25 @@
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0*   Trying 18.153.48.158:8080...
+* Connected to 18.153.48.158 (18.153.48.158) port 8080
+* using HTTP/1.x
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0> GET / HTTP/1.1
+> Host: 18.153.48.158:8080
+> User-Agent: curl/8.12.1
+> Accept: */*
+> 
+* Request completely sent off
+* HTTP 1.0, assume close after body
+< HTTP/1.0 200 OK
+< Server: SimpleHTTP/0.6 Python/3.9.25
+< Date: Fri, 11 Sep 2026 23:31:37 GMT
+< Content-type: text/html
+< Content-Length: 118
+< Last-Modified: Fri, 11 Sep 2026 23:29:26 GMT
+< 
+{ [118 bytes data]
+100   118  100   118    0     0    138      0 --:--:-- --:--:-- --:--:--   138<!doctype html><title>Kente Retail staging</title>
+<h1>Kente Retail staging app</h1>
+<p>Provisioned by Terraform.</p>
+
+* shutting down connection #0
